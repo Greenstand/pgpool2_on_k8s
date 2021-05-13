@@ -1,5 +1,7 @@
 # Run Pgpool-II on Kubernetes
 
+Greenstand version of pgpool
+
 This repository contains Dockerfile and <code>YAML</code> files that can be used to deploy [Pgpool-II](https://pgpool.net "Pgpool-II") and PostgreSQL Streaming Replication with [KubeDB](https://kubedb.com/ "KubeDB") on Kubernetes.
 
 # Requirements
