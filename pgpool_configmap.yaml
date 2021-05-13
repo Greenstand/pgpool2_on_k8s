@@ -4,6 +4,7 @@ metadata:
   name: pgpool-config
   labels:
     app: pgpool-config
+#    backend_hostname0 = 'db-postgresql-sfo2-nextgen-do-user-1067699-0.db.ondigitalocean.com'
 data:
   pgpool.conf: |-
     listen_addresses = '*'
@@ -12,17 +13,13 @@ data:
     pcp_listen_addresses = '*'
     pcp_port = 9898
     pcp_socket_dir = '/var/run/pgpool'
-    backend_hostname0 = 'hippo'
-    backend_port0 = 5432
+    backend_hostname0 = '165.227.9.181'
+    backend_port0 = 25060
     backend_weight0 = 1
     backend_flag0 = 'ALWAYS_PRIMARY|DISALLOW_TO_FAILOVER'
-    backend_hostname1 = 'hippo-replica'
-    backend_port1 = 5432
-    backend_weight1 = 1
-    backend_flag1 = 'DISALLOW_TO_FAILOVER'
     sr_check_period = 0
     enable_pool_hba = off
-    backend_clustering_mode = 'streaming_replication'
+    backend_clustering_mode = 'raw'
     num_init_children = 32
     max_pool = 4
     child_life_time = 300
