@@ -1,0 +1,41 @@
+name: Deploy to Dev Env
+
+
+on:
+  workflow_dispatch:
+    inputs:
+      git-tag:
+        description: 'tag'
+        required: true
+
+env: 
+  project-directory: ./
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: |
+      github.repository == 'Greenstand/pgpool2_on_k8s'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.git-tag }}
+      - name: Install kustomize
+        run: curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+        working-directory: ${{ env.project-directory }}
+      - name: Copy kustomize.yml
+        run: cp ./deployment/kustomize/kustomization.yaml ./deployment/kustomization.yaml
+        working-directory: ${{ env.project-directory }}
+      - name: Run kustomize
+        run: (cd ./deployment/base )
+        working-directory: ${{ env.project-directory }}
+      - name: Install doctl for kubernetes
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ${{ secrets.DEV_CLUSTER_NAME }}
+      - name: Update kubernetes resources
+        run: kustomize build deployment/overlays/development | kubectl apply -n pgpool --wait -f -
+        working-directory: ${{ env.project-directory }}
